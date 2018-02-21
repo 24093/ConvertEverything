@@ -1,7 +1,6 @@
 ﻿namespace ConvertEverything.Applications
 {
-    internal interface IApplication : IDeepCloneable<IApplication>
+    internal interface IApplication
     {
-
     }
 }

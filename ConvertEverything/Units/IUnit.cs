@@ -1,7 +1,7 @@
 ﻿namespace ConvertEverything.Units
 {
-    internal interface IUnit : IDeepCloneable<IUnit>
+    internal interface IUnit
     {
-
+        string Symbol { get; }
     }
 }

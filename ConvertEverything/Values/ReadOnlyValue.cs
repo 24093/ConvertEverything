@@ -1,38 +1,51 @@
 ﻿using ConvertEverything.Applications;
-using ConvertEverything.Dimensions;
+using ConvertEverything.Quantities;
 using ConvertEverything.Units;
 
 namespace ConvertEverything.Values
 {
-    internal class ReadOnlyValue<T> : IDeepCloneable<ReadOnlyValue<T>> where T : IDeepCloneable<T>
+    internal class ReadOnlyValue<TData> : IValue<TData>
     {
-        public T Value { get; }
+        public ReadOnlyValue(TData value, TData precision, IQuantity quantity, IUnit unit, IApplication application)
+        {
+            Value = value;
+            Precision = precision;
+            Quantity = quantity;
+            Unit = unit;
+            Application = application;
+        }
 
-        public T Precision { get; }
+        public TData Value { get; }
 
-        public IDimension Dimension { get; }
+        public TData Precision { get; }
+
+        public IQuantity Quantity { get; }
 
         public IUnit Unit { get; }
 
         public IApplication Application { get; }
 
-        public ReadOnlyValue(T value, T precision, IDimension dimension, IUnit unit, IApplication application)
+        public IValue<TData> DeepClone()
         {
-            Value = value;
-            Precision = precision;
-            Dimension = dimension;
-            Unit = unit;
-            Application = application;
+            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
+            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
+
+            return new ReadOnlyValue<TData>(value, precision, Quantity, Unit, Application);
         }
 
-        public ReadOnlyValue<T> DeepClone()
+        public MutableValue<TData> ToMutableValue()
         {
-            return new ReadOnlyValue<T>(
-                Value.DeepClone(),
-                Precision.DeepClone(),
-                Dimension.DeepClone(),
-                Unit.DeepClone(),
-                Application.DeepClone());
+            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
+            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
+
+            return new MutableValue<TData>
+            {
+                Value = value,
+                Precision = precision,
+                Quantity = Quantity,
+                Unit = Unit,
+                Application = Application
+            };
         }
     }
 }
