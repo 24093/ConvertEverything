@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "J";
 
         public IUnit SiUnit => new Candela();
+
+        public IQuantity DeepClone()
+        {
+            return new LuminousIntensity();
+        }
     }
 }

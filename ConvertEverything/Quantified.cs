@@ -6,25 +6,30 @@ namespace ConvertEverything
 {
     internal abstract class Quantified
     {
-        private readonly Dictionary<IQuantity, int> _quantities = new Dictionary<IQuantity, int>();
+        protected readonly Dictionary<IQuantity, int> Quantities = new Dictionary<IQuantity, int>();
 
         protected Quantified(int lengthQuantity, int massQuantity, int timeQuantity, int electricCurrentQuantity,
             int thermodynamicTemperatureQuantity, int amountOfSubstanceQuantity, int luminousIntensityQuantity)
         {
-            _quantities.Add(new Length(), lengthQuantity);
-            _quantities.Add(new Mass(), massQuantity);
-            _quantities.Add(new Time(), timeQuantity);
-            _quantities.Add(new ElectricCurrent(), electricCurrentQuantity);
-            _quantities.Add(new ThermodynamicTemperature(), thermodynamicTemperatureQuantity);
-            _quantities.Add(new AmountOfSubstance(), amountOfSubstanceQuantity);
-            _quantities.Add(new LuminousIntensity(), luminousIntensityQuantity);
+            Quantities.Add(new Length(), lengthQuantity);
+            Quantities.Add(new Mass(), massQuantity);
+            Quantities.Add(new Time(), timeQuantity);
+            Quantities.Add(new ElectricCurrent(), electricCurrentQuantity);
+            Quantities.Add(new ThermodynamicTemperature(), thermodynamicTemperatureQuantity);
+            Quantities.Add(new AmountOfSubstance(), amountOfSubstanceQuantity);
+            Quantities.Add(new LuminousIntensity(), luminousIntensityQuantity);
         }
 
+        protected Quantified(Dictionary<IQuantity, int> quantities)
+        {
+            Quantities = quantities;
+        }
+        
         protected string ComposeQuantifiedString(Func<IQuantity, int, string> quantityAction)
         {
             var symbol = string.Empty;
 
-            foreach (var keyValuePair in _quantities)
+            foreach (var keyValuePair in Quantities)
                 if (keyValuePair.Value != 0)
                     symbol += quantityAction(keyValuePair.Key, keyValuePair.Value);
 

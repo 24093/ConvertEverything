@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "M";
 
         public IUnit SiUnit => new Kilogram();
+
+        public IQuantity DeepClone()
+        {
+            return new Mass();
+        }
     }
 }

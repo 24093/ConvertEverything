@@ -1,4 +1,5 @@
-﻿using ConvertEverything.Units;
+﻿using System.Collections.Generic;
+using ConvertEverything.Units;
 
 namespace ConvertEverything.Quantities
 {
@@ -13,7 +14,13 @@ namespace ConvertEverything.Quantities
                 thermodynamicTemperatureQuantity, amountOfSubstanceQuantity, luminousIntensityQuantity);
         }
 
-        public string QuantitySymbol => ComposeQuantitySymbol();
+        private DerivedQuantity(Dictionary<IQuantity, int> quantities, IUnit siUnit)
+            : base(quantities)
+        {
+            SiUnit = siUnit;
+        }
+
+        public virtual string QuantitySymbol => ComposeQuantitySymbol();
 
         public string DimensionSymbol => ComposeDimensionSymbol();
 
@@ -27,6 +34,16 @@ namespace ConvertEverything.Quantities
         private string ComposeDimensionSymbol()
         {
             return ComposeQuantifiedString((quantity, power) => quantity.DimensionSymbol + "^" + power + " ");
+        }
+        
+        public IQuantity DeepClone()
+        {
+            var q = new Dictionary<IQuantity, int>();
+
+            foreach (var quantity in Quantities)
+                q.Add(quantity.Key.DeepClone(), quantity.Value);
+
+            return new DerivedQuantity(q, SiUnit.DeepClone());
         }
     }
 }

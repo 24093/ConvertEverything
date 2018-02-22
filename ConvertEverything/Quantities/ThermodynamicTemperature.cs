@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "Θ";
 
         public IUnit SiUnit => new Kelvin();
+
+        public IQuantity DeepClone()
+        {
+            return new ThermodynamicTemperature();
+        }
     }
 }

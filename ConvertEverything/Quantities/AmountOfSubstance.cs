@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "N";
 
         public IUnit SiUnit => new Mole();
+
+        public IQuantity DeepClone()
+        {
+            return new AmountOfSubstance();
+        }
     }
 }

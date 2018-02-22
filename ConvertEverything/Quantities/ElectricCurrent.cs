@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "I";
 
         public IUnit SiUnit => new Ampere();
+
+        public IQuantity DeepClone()
+        {
+            return new ElectricCurrent();
+        }
     }
 }

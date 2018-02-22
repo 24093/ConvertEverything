@@ -1,4 +1,7 @@
-﻿namespace ConvertEverything.Units
+﻿using System.Collections.Generic;
+using ConvertEverything.Quantities;
+
+namespace ConvertEverything.Units
 {
     internal class DerivedUnit : Quantified, IUnit
     {
@@ -9,11 +12,26 @@
         {
         }
 
-        public string Symbol => ComposeSymbol();
+        private DerivedUnit(Dictionary<IQuantity, int> quantities)
+            : base(quantities)
+        {
+        }
 
+        public string Symbol => ComposeSymbol();
+        
         private string ComposeSymbol()
         {
             return ComposeQuantifiedString((quantity, power) => quantity.SiUnit.Symbol + "^" + power + " ");
+        }
+
+        public IUnit DeepClone()
+        {
+            var q = new Dictionary<IQuantity, int>();
+
+            foreach (var quantity in Quantities)
+                q.Add(quantity.Key.DeepClone(), quantity.Value);
+
+            return new DerivedUnit(q);
         }
     }
 }

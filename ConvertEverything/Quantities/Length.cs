@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "L";
 
         public IUnit SiUnit => new Metre();
+
+        public IQuantity DeepClone()
+        {
+            return new Length();
+        }
     }
 }

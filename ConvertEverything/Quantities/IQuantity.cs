@@ -2,7 +2,7 @@
 
 namespace ConvertEverything.Quantities
 {
-    internal interface IQuantity
+    internal interface IQuantity : IDeepCloneable<IQuantity>
     {
         string QuantitySymbol { get; }
 

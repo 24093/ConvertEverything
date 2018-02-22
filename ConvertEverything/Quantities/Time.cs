@@ -9,5 +9,10 @@ namespace ConvertEverything.Quantities
         public string DimensionSymbol => "T";
 
         public IUnit SiUnit => new Second();
+
+        public IQuantity DeepClone()
+        {
+            return new Time();
+        }
     }
 }

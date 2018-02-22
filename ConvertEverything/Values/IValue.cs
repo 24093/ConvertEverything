@@ -1,5 +1,4 @@
-﻿using ConvertEverything.Applications;
-using ConvertEverything.Quantities;
+﻿using ConvertEverything.Quantities;
 using ConvertEverything.Units;
 
 namespace ConvertEverything.Values
@@ -13,7 +12,5 @@ namespace ConvertEverything.Values
         IQuantity Quantity { get; }
 
         IUnit Unit { get; }
-
-        IApplication Application { get; }
     }
 }
