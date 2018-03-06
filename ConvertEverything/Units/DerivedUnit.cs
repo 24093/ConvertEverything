@@ -17,12 +17,7 @@ namespace ConvertEverything.Units
         {
         }
 
-        public string Symbol => ComposeSymbol();
-        
-        private string ComposeSymbol()
-        {
-            return ComposeQuantifiedString((quantity, power) => quantity.SiUnit.Symbol + "^" + power + " ");
-        }
+        public virtual string Symbol => ComposeSymbol();
 
         public IUnit DeepClone()
         {
@@ -32,6 +27,11 @@ namespace ConvertEverything.Units
                 q.Add(quantity.Key.DeepClone(), quantity.Value);
 
             return new DerivedUnit(q);
+        }
+
+        private string ComposeSymbol()
+        {
+            return ComposeQuantifiedString((quantity, power) => quantity.SiUnit.Symbol + "^" + power + " ");
         }
     }
 }

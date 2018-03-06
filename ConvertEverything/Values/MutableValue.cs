@@ -1,55 +1,102 @@
-﻿using ConvertEverything.Quantities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ConvertEverything.Quantities;
 using ConvertEverything.Units;
 
 namespace ConvertEverything.Values
 {
-    internal class MutableValue<TData> : IValue<TData>
+    internal class MutableValue : IValue
     {
-        public History History = new History();
+        private readonly List<Change> _history = new List<Change>();
 
-        private TData _value;
-        
-        public TData Value
+        private double _precision;
+
+        private IQuantity _quantity;
+
+        private IUnit _unit;
+
+        private double _value;
+
+        public MutableValue()
         {
-            get => _value;
-            set
-            {
-                _value = value;
-                History.Add(nameof(Value), Value, value);
-            }
         }
 
-        public TData Precision { get; }
-
-        public IQuantity Quantity { get; }
-
-        public IUnit Unit { get; }
-        
-        public MutableValue(TData value, TData precision, IQuantity quantity, IUnit unit)
+        public MutableValue(double value, double precision, IQuantity quantity, IUnit unit)
         {
             Value = value;
             Precision = precision;
             Quantity = quantity;
             Unit = unit;
         }
-        
-        public IValue<TData> DeepClone()
-        {
-            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
-            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
 
-            return new MutableValue<TData>(value, precision, Quantity.DeepClone(), Unit.DeepClone())
-            {
-                History = History.DeepClone()
-            };
+        private MutableValue(double value, double precision, IQuantity quantity, IUnit unit, List<Change> history)
+        {
+            Value = value;
+            Precision = precision;
+            Quantity = quantity;
+            Unit = unit;
+            _history = history;
         }
 
-        public ReadOnlyValue<TData> ToReadOnlyValue()
-        {
-            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
-            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
+        public IEnumerable<Change> History => _history.AsReadOnly();
 
-            return new ReadOnlyValue<TData>(value, precision, Quantity.DeepClone(), Unit.DeepClone());
+        public double Value
+        {
+            get => _value;
+            set
+            {
+                LogChange(nameof(Value), Value, value);
+                _value = value;
+            }
+        }
+
+        public double Precision
+        {
+            get => _precision;
+            set
+            {
+                LogChange(nameof(Precision), Precision, value);
+                _precision = value;
+            }
+        }
+
+        public IQuantity Quantity
+        {
+            get => _quantity;
+            set
+            {
+                LogChange(nameof(Quantity), Quantity, value);
+                _quantity = value;
+            }
+        }
+
+        public IUnit Unit
+        {
+            get => _unit;
+            set
+            {
+                LogChange(nameof(Unit), Unit, value);
+                _unit = value;
+            }
+        }
+
+        public IValue DeepClone()
+        {
+            var history = new List<Change>();
+            foreach (var change in _history) history.Add(change.DeepClone());
+
+            return new MutableValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone(), history);
+        }
+
+        public ReadOnlyValue ToReadOnlyValue()
+        {
+            return new ReadOnlyValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone());
+        }
+
+        private void LogChange(string changedProperty, dynamic previousValue, dynamic nextValue)
+        {
+            _history.Add(new Change(changedProperty, previousValue, nextValue));
         }
     }
 }

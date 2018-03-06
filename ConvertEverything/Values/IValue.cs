@@ -3,11 +3,11 @@ using ConvertEverything.Units;
 
 namespace ConvertEverything.Values
 {
-    internal interface IValue<TData> : IDeepCloneable<IValue<TData>>
+    internal interface IValue : IDeepCloneable<IValue>
     {
-        TData Value { get; }
+        double Value { get; }
 
-        TData Precision { get; }
+        double Precision { get; }
 
         IQuantity Quantity { get; }
 

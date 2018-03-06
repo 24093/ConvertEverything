@@ -20,11 +20,23 @@ namespace ConvertEverything.Quantities
             SiUnit = siUnit;
         }
 
+        public virtual IUnit CommonUnit => SiUnit;
+
         public virtual string QuantitySymbol => ComposeQuantitySymbol();
 
         public string DimensionSymbol => ComposeDimensionSymbol();
 
         public IUnit SiUnit { get; }
+
+        public IQuantity DeepClone()
+        {
+            var q = new Dictionary<IQuantity, int>();
+
+            foreach (var quantity in Quantities)
+                q.Add(quantity.Key.DeepClone(), quantity.Value);
+
+            return new DerivedQuantity(q, SiUnit.DeepClone());
+        }
 
         private string ComposeQuantitySymbol()
         {
@@ -34,16 +46,6 @@ namespace ConvertEverything.Quantities
         private string ComposeDimensionSymbol()
         {
             return ComposeQuantifiedString((quantity, power) => quantity.DimensionSymbol + "^" + power + " ");
-        }
-        
-        public IQuantity DeepClone()
-        {
-            var q = new Dictionary<IQuantity, int>();
-
-            foreach (var quantity in Quantities)
-                q.Add(quantity.Key.DeepClone(), quantity.Value);
-
-            return new DerivedQuantity(q, SiUnit.DeepClone());
         }
     }
 }

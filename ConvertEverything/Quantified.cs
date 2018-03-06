@@ -24,7 +24,7 @@ namespace ConvertEverything
         {
             Quantities = quantities;
         }
-        
+
         protected string ComposeQuantifiedString(Func<IQuantity, int, string> quantityAction)
         {
             var symbol = string.Empty;

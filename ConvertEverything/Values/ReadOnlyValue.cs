@@ -3,9 +3,9 @@ using ConvertEverything.Units;
 
 namespace ConvertEverything.Values
 {
-    internal class ReadOnlyValue<TData> : IValue<TData>
+    internal class ReadOnlyValue : IValue
     {
-        public ReadOnlyValue(TData value, TData precision, IQuantity quantity, IUnit unit)
+        public ReadOnlyValue(double value, double precision, IQuantity quantity, IUnit unit)
         {
             Value = value;
             Precision = precision;
@@ -13,28 +13,22 @@ namespace ConvertEverything.Values
             Unit = unit;
         }
 
-        public TData Value { get; }
+        public double Value { get; }
 
-        public TData Precision { get; }
+        public double Precision { get; }
 
         public IQuantity Quantity { get; }
 
         public IUnit Unit { get; }
 
-        public IValue<TData> DeepClone()
+        public IValue DeepClone()
         {
-            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
-            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
-
-            return new ReadOnlyValue<TData>(value, precision, Quantity.DeepClone(), Unit.DeepClone());
+            return new ReadOnlyValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone());
         }
 
-        public MutableValue<TData> ToMutableValue()
+        public MutableValue ToMutableValue()
         {
-            var value = Value is IDeepCloneable<TData> v ? v.DeepClone() : Value;
-            var precision = Precision is IDeepCloneable<TData> p ? p.DeepClone() : Precision;
-
-            return new MutableValue<TData>(value, precision, Quantity.DeepClone(), Unit.DeepClone());
+            return new MutableValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone());
         }
     }
 }
