@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ConvertEverything.Quantities;
+﻿using ConvertEverything.Quantities;
 using ConvertEverything.Units;
+using System.Collections.Generic;
+using ConvertEverything.Scales;
 
 namespace ConvertEverything.Values
 {
     internal class MutableValue : IValue
     {
+        public readonly ReadOnlyValue OriginalValue;
+
         private readonly List<Change> _history = new List<Change>();
 
         private double _precision;
@@ -18,24 +19,32 @@ namespace ConvertEverything.Values
 
         private double _value;
 
+        private IScale _scale;
+
         public MutableValue()
         {
         }
 
-        public MutableValue(double value, double precision, IQuantity quantity, IUnit unit)
+        public MutableValue(double value, double precision, IQuantity quantity, IUnit unit, IScale scale)
         {
+            OriginalValue = new ReadOnlyValue(value, precision, quantity, unit, scale);
+
             Value = value;
             Precision = precision;
             Quantity = quantity;
             Unit = unit;
+            Scale = scale;
         }
 
-        private MutableValue(double value, double precision, IQuantity quantity, IUnit unit, List<Change> history)
+        private MutableValue(double value, double precision, IQuantity quantity, IUnit unit, IScale scale, List<Change> history)
         {
+            OriginalValue = new ReadOnlyValue(value, precision, quantity, unit, scale);
+
             Value = value;
             Precision = precision;
             Quantity = quantity;
             Unit = unit;
+            Scale = scale;
             _history = history;
         }
 
@@ -81,17 +90,27 @@ namespace ConvertEverything.Values
             }
         }
 
+        public IScale Scale
+        {
+            get => _scale;
+            set
+            {
+                LogChange(nameof(Scale), Scale, value);
+                _scale = value;
+            }
+        }
+        
         public IValue DeepClone()
         {
             var history = new List<Change>();
             foreach (var change in _history) history.Add(change.DeepClone());
 
-            return new MutableValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone(), history);
+            return new MutableValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone(), Scale.DeepClone(), history);
         }
 
         public ReadOnlyValue ToReadOnlyValue()
         {
-            return new ReadOnlyValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone());
+            return new ReadOnlyValue(Value, Precision, Quantity.DeepClone(), Unit.DeepClone(), Scale.DeepClone());
         }
 
         private void LogChange(string changedProperty, dynamic previousValue, dynamic nextValue)

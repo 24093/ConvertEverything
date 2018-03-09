@@ -13,7 +13,7 @@ namespace ConvertEverythingUnitTests
         [TestMethod]
         public void TestConvert()
         {
-            var val = new MutableValue(2350, 1, new Length(), new MilliMetre());
+            var val = new MutableValue(2350, 1, new Length(), new Metre());
             var canConvert = val.CanConvert(new Metre());
             Assert.IsTrue(canConvert);
 

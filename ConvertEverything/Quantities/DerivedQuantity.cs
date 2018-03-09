@@ -5,7 +5,7 @@ namespace ConvertEverything.Quantities
 {
     internal class DerivedQuantity : Quantified, IQuantity
     {
-        public DerivedQuantity(int lengthQuantity, int massQuantity, int timeQuantity, int electricCurrentQuantity,
+        protected DerivedQuantity(int lengthQuantity, int massQuantity, int timeQuantity, int electricCurrentQuantity,
             int thermodynamicTemperatureQuantity, int amountOfSubstanceQuantity, int luminousIntensityQuantity)
             : base(lengthQuantity, massQuantity, timeQuantity, electricCurrentQuantity,
                 thermodynamicTemperatureQuantity, amountOfSubstanceQuantity, luminousIntensityQuantity)

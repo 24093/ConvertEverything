@@ -18,7 +18,7 @@ namespace ConvertEverything.Units
         }
 
         public virtual string Symbol => ComposeSymbol();
-
+        
         public IUnit DeepClone()
         {
             var q = new Dictionary<IQuantity, int>();
